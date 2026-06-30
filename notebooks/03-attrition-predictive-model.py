@@ -25,6 +25,8 @@ def train_attrition_model():
             target_col = 'Flight_Risk'
         elif 'Left' in df.columns:
             target_col = 'Left'
+        elif 'Attrition_Flag' in df.columns:
+            target_col = 'Attrition_Flag'
         else:
             raise ValueError("❌ Target column not found! Please check the printed columns above.")
             
