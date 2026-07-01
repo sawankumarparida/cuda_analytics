@@ -15,6 +15,9 @@ def train_attrition_model():
     print("📊 Loading and Preprocessing Data...")
     df = pd.read_csv('enterprise_hr_dataset.csv')
     
+    # Store a copy of the original dataframe to export later with our predictions
+    original_df = df.copy()
+    
     # Print columns for debugging
     print(f"📌 Found columns in dataset: {df.columns.tolist()}")
     
@@ -160,6 +163,25 @@ def train_attrition_model():
             if imp > 0:
                 print(f"  {rank}. {feature:<20} (Impact Score: {imp:.2f})")
         print("\n")
+
+    # ==========================================
+    # 6. EXPORT PREDICTIONS FOR POWER BI
+    # ==========================================
+    print("💾 Generating Flight Risk scores for all employees...")
+    
+    with torch.no_grad():
+        # Ask the trained model to predict the risk for the entire dataset
+        all_predictions = model(X).cpu().numpy()
+        
+    # Append the raw percentage to the original dataframe
+    original_df['Predicted_Flight_Risk_%'] = (all_predictions * 100).round(2)
+    
+    # Save the new dataset
+    export_filename = 'scored_hr_dataset.csv'
+    original_df.to_csv(export_filename, index=False)
+    
+    print(f"✅ Success! Predictions saved to '{export_filename}'.")
+    print("📈 You can now import this file into Power BI to visualize the Flight Risk for every employee!\n")
 
 if __name__ == "__main__":
     train_attrition_model()
