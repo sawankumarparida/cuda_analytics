@@ -1,0 +1,1 @@
+This project demonstrates the ability to handle massive datasets using GPU-accelerated computing, translate raw data into actionable business intelligence, and predict future outcomes using Deep Learning.
