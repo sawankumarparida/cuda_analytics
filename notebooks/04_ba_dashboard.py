@@ -23,10 +23,15 @@ tool = st.sidebar.radio("Available Tools", [
 # Helper function to load data safely
 def load_uploaded_file(uploaded_file):
     if uploaded_file.name.endswith('.csv'):
-        return pd.read_csv(uploaded_file)
+        df = pd.read_csv(uploaded_file)
     elif uploaded_file.name.endswith(('.xls', '.xlsx')):
-        return pd.read_excel(uploaded_file)
-    return None
+        df = pd.read_excel(uploaded_file)
+    else:
+        return None
+        
+    # FIX: Drop duplicate column names to prevent "not 1-dimensional" pivot errors
+    df = df.loc[:, ~df.columns.duplicated()]
+    return df
 
 # ==========================================
 # TOOL 1: DATA PROFILER & CLEANER
