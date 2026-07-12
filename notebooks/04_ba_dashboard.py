@@ -29,7 +29,7 @@ def load_uploaded_file(uploaded_file):
     else:
         return None
         
-    # FIX: Drop duplicate column names to prevent "not 1-dimensional" pivot errors
+    # Drop duplicate column names just in case they exist
     df = df.loc[:, ~df.columns.duplicated()]
     return df
 
@@ -139,7 +139,12 @@ elif tool == "📈 Instant Pivot Table Generator":
             index_col = col1.selectbox("Group By (Category):", options=df.columns)
             
             # Only allow numeric columns for the values
-            numeric_cols = df.select_dtypes(include=['float64', 'int64']).columns
+            numeric_cols = df.select_dtypes(include=['number']).columns.tolist()
+            
+            # FIX: Prevent the "not 1-dimensional" error by ensuring Group By and Value columns are never the same
+            if index_col in numeric_cols:
+                numeric_cols.remove(index_col)
+                
             if len(numeric_cols) > 0:
                 value_col = col2.selectbox("Value to Calculate:", options=numeric_cols)
                 agg_func = col3.selectbox("Math Function:", options=["sum", "mean", "count", "max", "min"])
@@ -165,4 +170,4 @@ elif tool == "📈 Instant Pivot Table Generator":
                     
                     st.pyplot(fig)
             else:
-                st.error("No numeric columns found in the dataset to aggregate!")
+                st.error("No other numeric columns available to calculate! Please select a different 'Group By' category.")
