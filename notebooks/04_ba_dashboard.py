@@ -1,11 +1,6 @@
-# MUST BE AT THE ABSOLUTE TOP BEFORE ANY OTHER IMPORTS
-import matplotlib
-matplotlib.use('Agg') # Force Matplotlib to headless mode in WSL
-
 import streamlit as st
 import pandas as pd
 import io
-import matplotlib.pyplot as plt
 
 # 1. Page Configuration
 st.set_page_config(page_title="BA Automation Hub", layout="wide")
@@ -159,15 +154,9 @@ elif tool == "📈 Instant Pivot Table Generator":
                     
                     # Generate a chart
                     st.subheader("Visualization")
-                    fig, ax = plt.subplots(figsize=(10, 4))
                     
-                    # Plot top 10 if there are too many categories
-                    plot_df = pivot_df.head(15) 
-                    ax.bar(plot_df[index_col].astype(str), plot_df[value_col], color='#4C72B0')
-                    plt.xticks(rotation=45, ha='right')
-                    ax.set_ylabel(f"{agg_func.title()} of {value_col}")
-                    ax.set_title(f"{value_col} by {index_col}")
-                    
-                    st.pyplot(fig)
+                    # Use Streamlit's native interactive chart instead of Matplotlib
+                    plot_df = pivot_df.head(15).set_index(index_col)
+                    st.bar_chart(plot_df[[value_col]])
             else:
                 st.error("No other numeric columns available to calculate! Please select a different 'Group By' category.")
