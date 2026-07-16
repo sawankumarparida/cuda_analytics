@@ -1,1 +1,6 @@
-This project demonstrates the ability to handle massive datasets using GPU-accelerated computing, translate raw data into actionable business intelligence, and predict future outcomes using Deep Learning.
+# Cuda Analytics
+To get started, you can clone the repository and open the solution file in any IDE.
+```
+git clone https://github.com/sawankumarparida/cuda_analytics.git
+```
+Star and Fork the repository to start contributing
