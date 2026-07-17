@@ -39,5 +39,26 @@ def start_project(name: str):
         
     console.print(f"[bold green]✅ Project '{name}' created with README and main.py![/bold green]")
 
+@app.command()
+def sync_git(message: str = typer.Option("Automated CLI sync", help="Your commit message")):
+    """
+    Safely adds, commits, pulls, and pushes all files to GitHub.
+    """
+    console.print("[bold cyan]🔄 Syncing workspace with GitHub...[/bold cyan]")
+    
+    try:
+        # 1. Add all files
+        subprocess.run(["git", "add", "."], check=True)
+        # 2. Commit (check=False because it might fail if there are no changes to commit)
+        subprocess.run(["git", "commit", "-m", message], check=False)
+        # 3. Pull latest changes safely
+        subprocess.run(["git", "pull", "origin", "main"], check=True)
+        # 4. Push to cloud
+        subprocess.run(["git", "push", "origin", "main"], check=True)
+        
+        console.print("[bold green]✅ Git sync complete! Your code is safe in the cloud.[/bold green]")
+    except subprocess.CalledProcessError as e:
+        console.print(f"[bold red]❌ An error occurred during git sync.[/bold red]")
+
 if __name__ == "__main__":
     app()
