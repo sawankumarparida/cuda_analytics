@@ -1,7 +1,9 @@
 import typer
 import subprocess
 import os
+import pandas as pd
 from rich.console import Console
+from rich.table import Table
 
 # Initialize Typer app and Rich console for pretty terminal output
 app = typer.Typer(help="SKP's Custom God-Mode CLI")
@@ -60,5 +62,39 @@ def sync_git(message: str = typer.Option("Automated CLI sync", help="Your commit
     except subprocess.CalledProcessError as e:
         console.print(f"[bold red]❌ An error occurred during git sync.[/bold red]")
 
+@app.command()
+def analyze(file_path: str):
+    """
+    Instantly profiles a CSV dataset and displays key metrics in the terminal.
+    """
+    console.print(f"[bold cyan]📊 Analyzing {file_path}...[/bold cyan]")
+    
+    try:
+        df = pd.read_csv(file_path)
+        
+        # Print Shape
+        console.print(f"\n[bold green]✅ Dataset Shape:[/bold green] {df.shape[0]:,} Rows | {df.shape[1]} Columns\n")
+        
+        # Build the Terminal Table
+        table = Table(title=f"Column Profile for {file_path}", show_header=True, header_style="bold yellow")
+        table.add_column("Column Name", style="cyan", no_wrap=True)
+        table.add_column("Data Type", style="magenta")
+        table.add_column("Missing Values", justify="right")
+        
+        # Loop through columns and populate the table
+        for col in df.columns:
+            dtype = str(df[col].dtype)
+            missing = df[col].isna().sum()
+            missing_str = f"[red]{missing}[/red]" if missing > 0 else f"[green]{missing}[/green]"
+            table.add_row(col, dtype, missing_str)
+            
+        console.print(table)
+        
+    except FileNotFoundError:
+        console.print(f"[bold red]❌ Error: File '{file_path}' not found.[/bold red]")
+    except Exception as e:
+        console.print(f"[bold red]❌ An error occurred: {e}[/bold red]")
+
 if __name__ == "__main__":
     app()
+
