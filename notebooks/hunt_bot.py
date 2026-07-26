@@ -4,6 +4,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from rich.console import Console
 from rich.table import Table
 import os
+from pypdf import PdfReader
 
 console = Console()
 
@@ -20,14 +21,23 @@ def run_job_matcher():
         
     df = pd.read_csv(csv_file)
     
-    # 2. Define Your Resume (Keywords & Skills)
-    # Sourced from your uploaded business analyst.pdf
-    my_resume = """
-    Business Analyst, SQL Server, Python, Pandas, NumPy, R Programming, 
-    Advanced Excel, Power BI, Data Visualization, Predictive Analytics, 
-    Stakeholder Reporting, Generative AI, Gemini models, APIs, dashboards
-    """
-    console.print("[bold yellow]📄 Analyzing Resume against Job Market...[/bold yellow]")
+    # 2. Automatically Extract Resume from PDF
+    pdf_file = "business analyst.pdf"
+    if not os.path.exists(pdf_file):
+        console.print(f"[bold red]❌ Error: '{pdf_file}' not found in this folder.[/bold red]")
+        return
+        
+    console.print(f"[bold yellow]📄 Extracting text dynamically from '{pdf_file}'...[/bold yellow]")
+    try:
+        reader = PdfReader(pdf_file)
+        my_resume = ""
+        for page in reader.pages:
+            my_resume += page.extract_text() + " "
+    except Exception as e:
+        console.print(f"[bold red]❌ Failed to read PDF: {e}[/bold red]")
+        return
+        
+    console.print("[bold yellow]🧠 Analyzing Resume against Job Market...[/bold yellow]")
     
     # 3. NLP Magic: TF-IDF and Cosine Similarity
     # We combine Job Title and Location to create a "document" for each job
