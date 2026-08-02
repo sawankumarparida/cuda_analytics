@@ -22,7 +22,7 @@ def run_job_matcher():
     df = pd.read_csv(csv_file)
     
     # 2. Automatically Extract Resume from PDF
-    pdf_file = "business analyst.pdf"
+    pdf_file = "business_analyst.pdf"
     if not os.path.exists(pdf_file):
         console.print(f"[bold red]❌ Error: '{pdf_file}' not found in this folder.[/bold red]")
         return
