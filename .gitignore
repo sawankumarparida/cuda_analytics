@@ -4,3 +4,4 @@ __pycache__/
 *.pbix.backup
 *.db
 *.sqlite
+*.csv
