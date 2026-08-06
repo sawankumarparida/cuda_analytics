@@ -11,7 +11,7 @@ console = Console()
 # 1. Create a local SQL Database connection
 # We use SQLite here because it requires zero configuration, but SQLAlchemy 
 # allows you to swap this single line to connect to MS SQL Server or MySQL!
-DB_URL = 'sqlite:///live_market_data.db'
+DB_URL = 'sqlite:////mnt/c/Users/skpar/Downloads/live_market_data.db'
 engine = create_engine(DB_URL)
 
 def fetch_and_store_data():
