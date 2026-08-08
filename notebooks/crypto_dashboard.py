@@ -11,7 +11,7 @@ st.set_page_config(page_title="Live Crypto Quant Terminal", layout="wide")
 st_autorefresh(interval=60000, key="crypto_refresh")
 
 st.title("⚡ Live Crypto Quant Terminal")
-st.markdown("Real-time multi-asset market data pipeline powered by Python, SQLite, and Streamlit.")
+st.markdown("Real-time multi-asset market data pipeline with Quantitative Moving Averages (EMA/SMA).")
 
 # Point Streamlit to the Linux mount path in WSL
 DB_PATH = "/mnt/c/Users/skpar/Downloads/live_market_data.db"
@@ -46,11 +46,17 @@ else:
     )
     
     # Filter dataframe based on sidebar selection
-    filtered_df = df[df["Asset"].isin(selected_assets)]
+    filtered_df = df[df["Asset"].isin(selected_assets)].copy()
 
-    # Main Multi-Line Price Chart (Updated with new width='stretch' syntax)
-    st.subheader("Live Price Action (USD)")
+    # Calculate Quantitative Indicators (Fast EMA 5 & Slow SMA 20 per Asset)
     if not filtered_df.empty:
+        filtered_df['EMA_5'] = filtered_df.groupby('Asset')['Price_USD'].transform(lambda x: x.ewm(span=5).mean())
+        filtered_df['SMA_20'] = filtered_df.groupby('Asset')['Price_USD'].transform(lambda x: x.rolling(window=20).mean())
+
+    # Main Multi-Line Price Chart with Moving Averages
+    st.subheader("Live Price Action & Quantitative Indicators (USD)")
+    if not filtered_df.empty:
+        # We plot the raw price action first
         fig = px.line(
             filtered_df, 
             x="Datetime", 
@@ -59,10 +65,21 @@ else:
             markers=True,
             template="plotly_dark"
         )
+        
+        # Overlay EMA and SMA lines dynamically for each asset
+        for asset in selected_assets:
+            asset_df = filtered_df[filtered_df['Asset'] == asset]
+            if not asset_df.empty:
+                fig.add_trace(
+                    px.line(asset_df, x="Datetime", y="EMA_5").update_traces(line=dict(dash="dot")).data[0]
+                )
+                fig.add_trace(
+                    px.line(asset_df, x="Datetime", y="SMA_20").update_traces(line=dict(dash="dash")).data[0]
+                )
+
         fig.update_layout(
             xaxis_title="Timestamp (UTC)",
-            yaxis_title="Price (USD)",
-            legend_title="Asset",
+            yaxis_title="Price / Indicator Value (USD)",
             hovermode="x unified"
         )
         st.plotly_chart(fig, width='stretch')
@@ -73,6 +90,6 @@ else:
     col2.metric("Tracked Assets", len(available_assets))
     col3.metric("Last Updated", str(df["Datetime"].max()) if not df.empty else "N/A")
 
-    # Raw Data Inspector (Updated with new width='stretch' syntax)
-    with st.expander("View Raw Database Logs"):
-        st.dataframe(df.tail(20), width='stretch')
+    # Raw Data Inspector
+    with st.expander("View Raw Database Logs & Indicators"):
+        st.dataframe(filtered_df.tail(20), width='stretch')
