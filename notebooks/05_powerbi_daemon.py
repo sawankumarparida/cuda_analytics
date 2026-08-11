@@ -83,13 +83,15 @@ def fetch_and_store_data():
                 
                 # Check for Bullish Crossover (EMA crosses above SMA)
                 if prev_row['EMA_5'] <= prev_row['SMA_20'] and curr_row['EMA_5'] > curr_row['SMA_20']:
-                    alert_msg = f"🚀 **BULLISH CROSSOVER ALERT!**\n• **Asset:** `{asset}`\n• **Price:** `${price:,.2f}`\n• **Signal:** Fast EMA crossed above Slow SMA!"
+                    # ADDED @everyone HERE
+                    alert_msg = f"@everyone 🚀 **BULLISH CROSSOVER ALERT!**\n• **Asset:** `{asset}`\n• **Price:** `${price:,.2f}`\n• **Signal:** Fast EMA crossed above Slow SMA!"
                     console.print(f"[bold yellow]⚡ SIGNAL TRIGGERED: {asset} Bullish Crossover![/bold yellow]")
                     send_discord_alert(alert_msg)
                 
                 # Check for Bearish Crossover (EMA crosses below SMA)
                 elif prev_row['EMA_5'] >= prev_row['SMA_20'] and curr_row['EMA_5'] < curr_row['SMA_20']:
-                    alert_msg = f"📉 **BEARISH CROSSOVER ALERT!**\n• **Asset:** `{asset}`\n• **Price:** `${price:,.2f}`\n• **Signal:** Fast EMA crossed below Slow SMA!"
+                    # ADDED @everyone HERE
+                    alert_msg = f"@everyone 📉 **BEARISH CROSSOVER ALERT!**\n• **Asset:** `{asset}`\n• **Price:** `${price:,.2f}`\n• **Signal:** Fast EMA crossed below Slow SMA!"
                     console.print(f"[bold red]⚡ SIGNAL TRIGGERED: {asset} Bearish Crossover![/bold red]")
                     send_discord_alert(alert_msg)
 
@@ -104,8 +106,8 @@ def fetch_and_store_data():
 console.print("[bold magenta]🚀 Quant Alert Daemon Started![/bold magenta]")
 console.print("Press [Ctrl+C] to stop the daemon.\n")
 
-# 1. SEND STARTUP PING TO DISCORD
-send_discord_alert("🟢 **SYSTEM ONLINE:** The Quant Trading Daemon has successfully started and is now monitoring live markets!")
+# 1. SEND STARTUP PING TO DISCORD (ADDED @everyone)
+send_discord_alert("@everyone 🟢 **SYSTEM ONLINE:** The Quant Trading Daemon has successfully started and is now monitoring live markets!")
 
 fetch_and_store_data()
 schedule.every(1).minutes.do(fetch_and_store_data)
@@ -116,5 +118,5 @@ try:
         time.sleep(1)
 except KeyboardInterrupt:
     console.print("\n[bold red]🛑 Daemon safely shut down by user.[/bold red]")
-    # 2. SEND SHUTDOWN PING TO DISCORD
-    send_discord_alert("🛑 **SYSTEM OFFLINE:** The Quant Trading Daemon has been manually shut down.")
+    # 2. SEND SHUTDOWN PING TO DISCORD (ADDED @everyone)
+    send_discord_alert("@everyone 🛑 **SYSTEM OFFLINE:** The Quant Trading Daemon has been manually shut down.")
