@@ -7,18 +7,31 @@ from datetime import datetime
 from rich.console import Console
 import requests
 
+# --- SECURITY UPDATE: Import dotenv and os ---
+import os
+from dotenv import load_dotenv
+
+# Load the hidden secrets from your local .env file
+load_dotenv()
+# ---------------------------------------------
+
 console = Console()
 
 # Database connection
 DB_URL = 'sqlite:////mnt/c/Users/skpar/Downloads/live_market_data.db'
 engine = create_engine(DB_URL)
 
-# Your exact Discord Webhook URL
-DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1536062953084690554/cNbA9IN2RT3-STaCj1aiMuprHiRO0qGnVsjxKUI3H8ERsrpQj3DgK-bG9rEp5Rhovg3W"
+# SECURE: Pull the URL securely from the hidden .env file!
+DISCORD_WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK_URL")
 
 def send_discord_alert(message):
     """Sends a push notification straight to your Discord channel via Webhook."""
     try:
+        # Failsafe if the .env file is missing
+        if not DISCORD_WEBHOOK_URL:
+            console.print("[bold red]❌ Error: DISCORD_WEBHOOK_URL is missing. Did you create the .env file?[/bold red]")
+            return
+
         payload = {
             "content": message
         }
