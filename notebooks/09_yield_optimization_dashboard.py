@@ -15,7 +15,7 @@ st.set_page_config(
 @st.cache_resource
 def load_model():
     model = xgb.Booster()
-    model.load_model("capacity_model.json")
+    model.load_model("09_capacity_model.json")
     return model
 
 model = load_model()
