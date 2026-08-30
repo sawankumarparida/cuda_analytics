@@ -34,7 +34,7 @@ st.markdown("Visualizing 500,000 telemetry pings to identify spatial bottlenecks
 # --- RENDER THE KEPLER MAP ---
 # Open the HTML file saved from Jupyter and inject it into Streamlit
 try:
-    with open("fleet_telemetry_dashboard.html", "r", encoding="utf-8") as f:
+    with open("08_fleet_telemetry_dashboard.html", "r", encoding="utf-8") as f:
         html_map = f.read()
     
     # Display the HTML string in an iframe

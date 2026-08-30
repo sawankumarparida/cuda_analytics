@@ -13,7 +13,7 @@ def train_attrition_model():
     # 1. DATA PREPARATION (Pandas -> PyTorch)
     # ==========================================
     print("📊 Loading and Preprocessing Data...")
-    df = pd.read_csv('enterprise_hr_dataset.csv')
+    df = pd.read_csv('02_enterprise_hr_dataset.csv')
     
     # Store a copy of the original dataframe to export later with our predictions
     original_df = df.copy()
@@ -177,7 +177,7 @@ def train_attrition_model():
     original_df['Predicted_Flight_Risk_%'] = (all_predictions * 100).round(2)
     
     # Save the new dataset
-    export_filename = 'scored_hr_dataset.csv'
+    export_filename = '03_scored_hr_dataset.csv'
     original_df.to_csv(export_filename, index=False)
     
     print(f"✅ Success! Predictions saved to '{export_filename}'.")

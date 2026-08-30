@@ -35,6 +35,6 @@ df = pd.DataFrame({
     'final_occupancy_pct': occupancy
 })
 
-file_name = "booking_capacity_data.csv"
+file_name = "09_booking_capacity_data.csv"
 df.to_csv(file_name, index=False)
 print(f"✅ Success! Saved 1 Million records to '{file_name}'.")

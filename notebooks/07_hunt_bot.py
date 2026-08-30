@@ -13,7 +13,7 @@ def run_job_matcher():
     
     # 1. Load the Scraped Data
     # This uses the CSV you generated earlier with your Job Scraper!
-    csv_file = "raw_scraped_jobs.csv"
+    csv_file = "07_raw_scraped_jobs.csv"
     if not os.path.exists(csv_file):
         console.print(f"[bold red]❌ Error: '{csv_file}' not found in this folder.[/bold red]")
         console.print("[yellow]Hint: Run your '01_extract_jobs.py' script first to gather data![/yellow]")
